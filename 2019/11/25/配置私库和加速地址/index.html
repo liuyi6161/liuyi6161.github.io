@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>配置私库和加速地址 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言docker允许我们通过配置daemon.json为其配置私库加速地址等其他配置。此处只为大家展示配置私库和加速地址的配置。如想进行更多配置请点击daemon.json查看更为细致的配置。 #####配置加速地址由于你懂的原因，很多官方镜像下载速度都很慢，所以这里需要一个加速器。国内目前有腾讯、阿里、百度、DaoCloud等加速器。这里使用的是阿里云的加速器。 1.首先登录阿里云（需要注册支付">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置私库和加速地址">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言docker允许我们通过配置daemon.json为其配置私库加速地址等其他配置。此处只为大家展示配置私库和加速地址的配置。如想进行更多配置请点击daemon.json查看更为细致的配置。 #####配置加速地址由于你懂的原因，很多官方镜像下载速度都很慢，所以这里需要一个加速器。国内目前有腾讯、阿里、百度、DaoCloud等加速器。这里使用的是阿里云的加速器。 1.首先登录阿里云（需要注册支付">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;1.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;2.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;addquickenaddress.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;restartdocker.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;quickensuccess.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;privaterepository.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;localpull.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;localimages.png">
+<meta property="og:updated_time" content="2019-11-25T05:40:32.144Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80&#x2F;1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-配置私库和加速地址" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/" class="article-date">
+  <time datetime="2019-11-25T05:39:32.460Z" itemprop="datePublished">2019-11-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      配置私库和加速地址
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>docker允许我们通过配置daemon.json为其配置私库加速地址等其他配置。此处只为大家展示配置私库和加速地址的配置。如想进行更多配置请点击<a href="https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file" target="_blank" rel="noopener">daemon.json</a>查看更为细致的配置。</p>
+<p>#####配置加速地址<br>由于你懂的原因，很多官方镜像下载速度都很慢，所以这里需要一个加速器。国内目前有腾讯、阿里、百度、DaoCloud等加速器。这里使用的是阿里云的加速器。<br> 1.首先登录阿里云（需要注册支付宝也可以登录）<br> 2.搜索容器镜像服务<br> <img src="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/1.png" alt><br> 3.生成加速地址<br> <img src="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/2.png" alt><br> 4.将生成的地址配置到daemon.json文件中<br> <code>vi /etc/docker/daemon.json</code>如果没有目录请自行创建<br>  <img src="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/addquickenaddress.png" alt><br>  这里我创建错文件后缀了…json写成了josn后面更改了<br> 5.重启docker<br> <code>systemctl daemon-reload</code><br> <code>systemctl restart docker</code><br>  <img src="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/restartdocker.png" alt><br> 6.查看是否配置成功<br> <code>docker info</code><br>  <img src="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/quickensuccess.png" alt><br> 7.到这里就结束了。后面发现下载速度简直飞一般。</p>
+<p>#####配置私库<br>私库每个公司的配置都不一致。所以只需要问你们公司leader就好了。但这里我提供了一个我个人的私库地址:192.168.66.99:5000。</p>
+<ol>
+<li>私库私库那么就是你必须要有一台服务器是存放了很多docker镜像，可以往这个仓库里面进行Pull 和push 。具体如何创建个人镜像仓库可以看网上很多教程。我这里就不做详解了。</li>
+<li>和配置加速器一样也是修改daemon.json内的参数即可。多个私库可以用多个逗号隔开。</li>
+</ol>
+<p>执行：</p>
+<ol>
+<li><p>添加私库地址到daemon.json配置中。<br><code>vi /etc/docker/daemon.json</code><br><img src="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/privaterepository.png" alt><br>每个键值对用逗号隔开记得</p>
+</li>
+<li><p>重启docker并查看是否添加成功<br><code>systemctl daemon-reload</code><br><code>systemctl restart docker</code><br><code>docker info</code></p>
+</li>
+<li><p>拉取私库镜像<br><code>docker pull 192.168.66.99:5000/hello-world</code></p>
+<p><img src="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/localpull.png" alt><br>ip和端口一定要带上不然就从docker官网上去pull了</p>
+</li>
+<li><p>查看拉取的镜像<br><code>docker images</code><br><img src="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/localimages.png" alt><br>这里我下了两个我私库的镜像</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/" data-id="ck3e0bdtp00013suy1kzo36cl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/25/git-runner/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">git-runner</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/">配置私库和加速地址</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/25/git-runner/">git-runner</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

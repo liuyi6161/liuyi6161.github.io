@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>git-runner | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言万物的初始：centos7 64位 内核3.10以上 且能够访问外网(如果通过安装包安装docker可以不需要)。首先这边简单阐述一下gitlab CI流水线的工作流程：首先通过配置CI runner然后编写.gitlab-ci.yml脚本定义如何执行。 执行runner时本质是在docker容器中进行下载你在脚本中定义的镜像并启动镜像（有其他见解欢迎提出），然后再这个镜像执行你想要进行的操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git-runner">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言万物的初始：centos7 64位 内核3.10以上 且能够访问外网(如果通过安装包安装docker可以不需要)。首先这边简单阐述一下gitlab CI流水线的工作流程：首先通过配置CI runner然后编写.gitlab-ci.yml脚本定义如何执行。 执行runner时本质是在docker容器中进行下载你在脚本中定义的镜像并启动镜像（有其他见解欢迎提出），然后再这个镜像执行你想要进行的操作">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;dockerdependent.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;yumorigin.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;installdocker.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;dockerinfo1.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;dockerinfo2.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;searchrunner.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;dockerrunnerps.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;sharedrunnerrm.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;specialtoken.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;entrycontainer.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;runnerregisterissuex509.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;registersuccess.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;registerresult.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;runnerapplication.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;sslissueok.png">
+<meta property="og:updated_time" content="2019-11-25T05:37:31.495Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;git-runner&#x2F;dockerdependent.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-git-runner" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/25/git-runner/" class="article-date">
+  <time datetime="2019-11-25T05:36:09.665Z" itemprop="datePublished">2019-11-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      git-runner
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h5><p>万物的初始：centos7 64位 内核3.10以上 且能够访问外网(如果通过安装包安装docker可以不需要)。首先这边简单阐述一下gitlab CI流水线的工作流程：首先通过配置CI runner然后编写.gitlab-ci.yml脚本定义如何执行。 执行runner时本质是在docker容器中进行下载你在脚本中定义的镜像并启动镜像（有其他见解欢迎提出），然后再这个镜像执行你想要进行的操作（script)。</p>
+<p>
+1. `uname -a`查看内核版本
+![](./git-runner/uname-a.png)
+本人使用的内核版本为3.10.0-957，安装的centos7，如较低版本请升级
+2. `wget www.baidu.com` 测试能否访问外网(需要安装wget。安装命令:yum install -y wget)
+![](./git-runner/wgetbaidu.png)
+这里测试我的虚拟机是可以访问外网的。
+如果不能访问外网请参考xxxxx进行解决。
+</p>
+
+<h5 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h5><ol>
+<li><p><strong>安装docker</strong><br> docker有两个版本:docker-ce和docker-ee。docker-ce对应社区版，docker-ee对应企业版。所以这里使用的duocker-ce社区版。(尽量用外网进行下载)<br>①.安装先决依赖<br><code>yum -y install yum-utils device-mapper-persistent-data lvm2</code><br><img src="/2019/11/25/git-runner/dockerdependent.png" alt><br>忽略一大波下载…<br>②.下载docker-ce的yum源到<br>   <code>wget http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</code><br><img src="/2019/11/25/git-runner/yumorigin.png" alt><br>③.使用yum安装docker-ce<br><code>yum -y install docker-ce</code><br><img src="/2019/11/25/git-runner/installdocker.png" alt><br>④.启动docker并查看docker信息<br><code>systemctl start docker</code> 启动docker<br><code>docker info</code>查看docker信息<br><img src="/2019/11/25/git-runner/dockerinfo1.png" alt><br><img src="/2019/11/25/git-runner/dockerinfo2.png" alt></p>
+<p>最后显示的两个warning可以通过<code>vi /etc/sysctl.conf</code><br>文件结尾添加以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br></pre></td></tr></table></figure>
+<p>最后执行<code>sysctl -p</code>解决</p>
+</li>
+<li><p><strong>拉取gitlab-runner镜像</strong><br>因为我们没有配置私库所以这里使用的库都是docker公司的公共库。我们也可以浏览器访问docker公司镜像库地址进行搜索。我们拉取的都是docker官网的镜像所以最好配置一个加速器。如你还不会配置docker加速器可以参考<a href="./git-runner/daemon.json-config/配置私库和加速地址.md">这里</a>进行配置</p>
+<p>a. 搜索gitlab-runner镜像.<br><code>docker search gitlab-runner</code><br><img src="/2019/11/25/git-runner/searchrunner.png" alt><br>第一个字段为imagename（镜像名字），第四个字段为official，是否为官方镜像，个人也可以把自己制作的镜像放到docker hub上，找到自己想要下载的镜像名字就可以拉取了。<br>b. 这里拉取gitlab/gitlab-runenr镜像。<br><code>docker pull gitlab/gitlab-runner</code><br>c. 运行gitlab-runner镜像 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name gitlab-runner --restart always \</span><br><span class="line">-v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">-v /srv/gitlab-runner/config:/etc/gitlab-runner \</span><br><span class="line">gitlab/gitlab-runner</span><br></pre></td></tr></table></figure>
+<p>这里参数一大堆可以通过编写docker-compose.yml使用docker-compose进行启动容器。如想尝试的可以自行学习。本教程不在进行增负。<br>d. 查看运行的镜像<br><code>docker ps</code><br><img src="/2019/11/25/git-runner/dockerrunnerps.png" alt></p>
+</li>
+<li><p><strong>在工程中禁用默认的Shared Runners选项</strong><br>项目-&gt;Setting-&gt;CI/CD-&gt;Runners<br><img src="/2019/11/25/git-runner/sharedrunnerrm.png" alt><br>查看Specific Runner的url和token令牌<br><img src="/2019/11/25/git-runner/specialtoken.png" alt></p>
+</li>
+<li><p><strong>注册Specific Runner</strong></p>
+<ol>
+<li>进入runner容器内部。<br><code>docker exec -it gitlab-runner /bin/bash</code><br><img src="/2019/11/25/git-runner/entrycontainer.png" alt></li>
+<li>注册<br><code>gitlab-runner register</code><br><img src="/2019/11/25/git-runner/runnerregisterissuex509.png" alt><br>如果你到这一步出现和我一样的错误，那么我要恭喜你好的你开始踩这个过程的第一个坑了。这个问题如果你熟悉计算机网络协议的话那么你很快就能反应出来这个是因为https服务器访问时需要验证证书引起的。<br>解决方案：<br>a.访问web下载证书 b.转化成pem文件 c.将pem改成crt文件 </li>
+<li>再次注册。这次我们换一种方式进行注册<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> gitlab-runner register  --non-interactive   \</span><br><span class="line">--tls-ca-file=/opt/my.crt    \</span><br><span class="line">--url &quot;https://gitlab.cae.com/&quot;  \</span><br><span class="line">--registration-token &quot;PxDzzTyphYACvKy6XbH8&quot;   \</span><br><span class="line">--executor &quot;docker&quot;  \</span><br><span class="line">--docker-image maven:latest   \</span><br><span class="line">--description &quot;runner-1 &quot;   \</span><br><span class="line">--tag-list &quot;runner_demo1&quot;  \</span><br><span class="line">--run-untagged   \</span><br><span class="line">--locked=&quot;false&quot;</span><br></pre></td></tr></table></figure>
+<img src="/2019/11/25/git-runner/registersuccess.png" alt><br>注册成功了 我们切到ci页面查看我们的runner<br><img src="/2019/11/25/git-runner/registerresult.png" alt></li>
+</ol>
+</li>
+<li><p><strong>将runner应用到CI中</strong><br>runner的应用特别简单只需要在<code>.gitlab-ci.yml</code>中配置<code>tags</code>节点即可。<br>配置我们的runner<br><img src="/2019/11/25/git-runner/runnerapplication.png" alt><br>这个时候在跑流水线就是我们自己的runner了</p>
+</li>
+</ol>
+<p>###参考文档<br>gitlab-runner config.toml文件配置。<a href="https://docs.gitlab.com/runner/configuration/" target="_blank" rel="noopener">https://docs.gitlab.com/runner/configuration/</a><br>gitlab-runner .gitlab-ci.yml配置。 <a href="https://docs.gitlab.com/ee/ci/yaml/README.html" target="_blank" rel="noopener">https://docs.gitlab.com/ee/ci/yaml/README.html</a><br>x509 证书问题: <a href="https://blog.csdn.net/coreych/article/details/51393739" target="_blank" rel="noopener">https://blog.csdn.net/coreych/article/details/51393739</a><br>CI流水线无法克隆代码（无法访问gitlab库）问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Reinitialized existing Git repository in /builds/lij/pipelinedemo/.git/</span><br><span class="line">fatal: unable to access &apos;https://gitlab-ci-token:[MASKED]@gitlab.cae.com/lij/pipelinedemo.git/&apos;: SSL certificate problem: unable to get local issuer certificate</span><br></pre></td></tr></table></figure>
+<p>参考：<a href="https://gitlab.com/gitlab-org/gitlab-runner/issues/2659" target="_blank" rel="noopener">https://gitlab.com/gitlab-org/gitlab-runner/issues/2659</a><br>解决模板:<br><img src="/2019/11/25/git-runner/sslissueok.png" alt></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/25/git-runner/" data-id="ck3e0bdti00003suy1j8gg85v" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          配置私库和加速地址
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/25/%E9%85%8D%E7%BD%AE%E7%A7%81%E5%BA%93%E5%92%8C%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80/">配置私库和加速地址</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/25/git-runner/">git-runner</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
